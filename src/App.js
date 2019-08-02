@@ -13,10 +13,13 @@ export default class App extends React.Component {
       trailsUnicorns: [],
       getUnicorns: this.getUnicorns,
     };
+  }
+
+  componentDidMount() {
     this.getUnicorns();
   }
 
-  async getUnicorns() {
+  getUnicorns = async () => {
     const unicorns = await fetch('http://localhost:3001/unicorns').then((response) => response.json());
 
     const barn = [];
@@ -38,9 +41,9 @@ export default class App extends React.Component {
       pastureUnicorns: pasture,
       trailsUnicorns: trails,
     });
-  }
+  };
 
-  async moveUnicorn(unicorn, newLocation) {
+  moveUnicorn = async (unicorn, newLocation) => {
     await fetch('http://localhost:3001/moveUnicorn', {
       method: 'POST',
       headers: {
@@ -52,7 +55,8 @@ export default class App extends React.Component {
         newLocation,
       }),
     });
-  }
+    this.getUnicorns();
+  };
 
   render() {
     return (
