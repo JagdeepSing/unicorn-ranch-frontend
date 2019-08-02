@@ -1,27 +1,35 @@
 import React from 'react';
+
+import UnicornArea from './unicorn-area/unicorn-area';
+
 import './App.css';
 
-class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       barnUnicorns: [],
       pastureUnicorns: [],
       trailsUnicorns: [],
+      getUnicorns: this.getUnicorns,
     };
+  }
+
+  componentDidMount() {
     this.getUnicorns();
   }
 
-  async getUnicorns() {
-    const unicorns = await fetch('http://localhost:3001/unicorns').then(response => response.json());
+  getUnicorns = async () => {
+    const unicorns = await fetch('https://unicorn-ranch.herokuapp.com/unicorns').then((response) => response.json());
+
     const barn = [];
     const pasture = [];
     const trails = [];
 
-    unicorns.forEach(unicorn => {
-      if (unicorn.location === 'barn') {
+    unicorns.forEach((unicorn) => {
+      if (unicorn.location.toLowerCase() === 'barn') {
         barn.push(unicorn);
-      } else if (unicorn.location === 'pasture') {
+      } else if (unicorn.location.toLowerCase() === 'pasture') {
         pasture.push(unicorn);
       } else {
         trails.push(unicorn);
@@ -31,52 +39,48 @@ class App extends React.Component {
     this.setState({
       barnUnicorns: barn,
       pastureUnicorns: pasture,
-      trailsUnicrons: trails,
+      trailsUnicorns: trails,
     });
-  }
+  };
+
+  moveUnicorn = async (unicorn, newLocation) => {
+    await fetch('https://unicorn-ranch.herokuapp.com/moveUnicorn', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: unicorn.id,
+        newLocation,
+      }),
+    });
+    this.getUnicorns();
+  };
 
   render() {
     return (
       <>
-        <section id="barn">
-          <h2>Barn</h2>
-          <ul>
-            {
-              this.state.barnUnicorns.map((unicorn) => {
-                return (
-                  <li>
-                    <div>
-                      <h4>{unicorn.name}</h4>
-                      <p>{unicorn.location}</p>
-                      <p>{unicorn.favorite_food}</p>
-                    </div>
-                  </li>
-                  );
-              })
-            }
-          </ul>
-        </section>
-
-        <section id="pasture">
-          <h2>Pasture</h2>
-          <ul>
-            <li>
-              Green Unicorn
-            </li>
-          </ul>
-        </section>
-        
-        <section id="trails">
-          <h2>Trails</h2>
-          <ul>
-            <li>
-              Purple Unicorn
-            </li>
-          </ul>
-        </section>
+        <h1>Unicorn Ranch</h1>
+        <UnicornArea 
+          id="barn" 
+          heading="Barn" 
+          unicorns={this.state.barnUnicorns} 
+          moveUnicorn={this.moveUnicorn} 
+        />
+        <UnicornArea
+          id="pasture"
+          heading="Pasture"
+          unicorns={this.state.pastureUnicorns}
+          moveUnicorn={this.moveUnicorn}
+        />
+        <UnicornArea
+          id="trails"
+          heading="Trails"
+          unicorns={this.state.trailsUnicorns}
+          moveUnicorn={this.moveUnicorn}
+        />
       </>
     );
   }
 }
-
-export default App;
