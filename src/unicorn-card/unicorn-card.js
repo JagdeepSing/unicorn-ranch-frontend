@@ -10,15 +10,15 @@ export default class UnicornCard extends React.Component {
         <p>Color: {this.props.unicorn.color}</p>
         <p>Favorite Food: {this.props.unicorn.favorite_food}</p>
 
-        {this.props.unicorn.location !== 'barn' && 
+        {this.props.unicorn.location !== 'barn' && (
           <button onClick={() => this.props.moveUnicorn(this.props.unicorn, 'barn')}>Move to Barn</button>
-        }
-        {this.props.unicorn.location !== 'pasture' &&
+        )}
+        {this.props.unicorn.location !== 'pasture' && (
           <button onClick={() => this.props.moveUnicorn(this.props.unicorn, 'pasture')}>Move to Pasture</button>
-        }
-        {this.props.unicorn.location !== 'trails' && 
+        )}
+        {this.props.unicorn.location !== 'trails' && (
           <button onClick={() => this.props.moveUnicorn(this.props.unicorn, 'trails')}>Move to Trails</button>
-        }
+        )}
       </div>
     );
   }
