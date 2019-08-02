@@ -20,7 +20,7 @@ export default class App extends React.Component {
   }
 
   getUnicorns = async () => {
-    const unicorns = await fetch('http://localhost:3001/unicorns').then((response) => response.json());
+    const unicorns = await fetch('https://unicorn-ranch.herokuapp.com/unicorns').then((response) => response.json());
 
     const barn = [];
     const pasture = [];
@@ -44,7 +44,7 @@ export default class App extends React.Component {
   };
 
   moveUnicorn = async (unicorn, newLocation) => {
-    await fetch('http://localhost:3001/moveUnicorn', {
+    await fetch('https://unicorn-ranch.herokuapp.com/moveUnicorn', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
