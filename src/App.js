@@ -1,4 +1,7 @@
 import React from 'react';
+
+import UnicornArea from './unicorn-area/unicorn-area';
+
 import './App.css';
 
 export default class App extends React.Component {
@@ -8,6 +11,7 @@ export default class App extends React.Component {
       barnUnicorns: [],
       pastureUnicorns: [],
       trailsUnicorns: [],
+      getUnicorns: this.getUnicorns,
     };
     this.getUnicorns();
   }
@@ -36,38 +40,43 @@ export default class App extends React.Component {
     });
   }
 
+  async moveUnicorn(unicorn, newLocation) {
+    await fetch('http://localhost:3001/moveUnicorn', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: unicorn.id,
+        newLocation,
+      }),
+    });
+  }
+
   render() {
     return (
       <>
-        <UnicornArea id="barn" heading="Barn" unicorns={this.state.barnUnicorns} />
-        <UnicornArea id="pasture" heading="Pasture" unicorns={this.state.pastureUnicorns} />
-        <UnicornArea id="trails" heading="Trails" unicorns={this.state.trailsUnicorns} />
+        <h1>Unicorn Ranch</h1>
+        <UnicornArea 
+          id="barn" 
+          heading="Barn" 
+          unicorns={this.state.barnUnicorns} 
+          moveUnicorn={this.moveUnicorn} 
+        />
+        <UnicornArea
+          id="pasture"
+          heading="Pasture"
+          unicorns={this.state.pastureUnicorns}
+          moveUnicorn={this.moveUnicorn}
+        />
+        <UnicornArea
+          id="trails"
+          heading="Trails"
+          unicorns={this.state.trailsUnicorns}
+          moveUnicorn={this.moveUnicorn}
+        />
       </>
-    );
-  }
-}
-
-class UnicornCard extends React.Component {
-  render() {
-    return (
-      <div id={this.props.unicorn.id} className="unicorn">
-        <h4>{this.props.unicorn.name}</h4>
-        <p>{this.props.unicorn.color}</p>
-        <p>{this.props.unicorn.favorite_food}</p>
-      </div>
-    );
-  }
-}
-
-class UnicornArea extends React.Component {
-  render() {
-    return (
-      <section id={this.props.id}>
-        <h2>{this.props.heading}</h2>
-        {this.props.unicorns.map((unicorn) => {
-          return <UnicornCard key={unicorn.id} unicorn={unicorn} />;
-        })}
-      </section>
     );
   }
 }
